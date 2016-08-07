@@ -121,7 +121,7 @@ var Search = {
     this.title = $('<h2>' + _('Searching') + '</h2>').appendTo(this.out);
     this.dots = $('<span></span>').appendTo(this.title);
     this.status = $('<p style="display: none"></p>').appendTo(this.out);
-    this.output = $('<ul class="search"/>').appendTo(this.out);
+    this.output = $('<ul class="am-list search"/>').appendTo(this.out);
 
     $('#search-progress').text(_('Preparing search...'));
     this.startPulse();
@@ -459,7 +459,7 @@ var Search = {
     var excerpt = ((start > 0) ? '...' : '') +
       $.trim(text.substr(start, 240)) +
       ((start + 240 - text.length) ? '...' : '');
-    var rv = $('<div class="context"></div>').text(excerpt);
+    var rv = $('<blockquote class="context"></blockquote>').text(excerpt);
     $.each(hlwords, function() {
       rv = rv.highlightText(this, 'highlighted');
     });

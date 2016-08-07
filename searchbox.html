@@ -9,12 +9,19 @@
 #}
 {%- if pagename != "search" and builder != "singlehtml" %}
 <div id="searchbox" style="display: none" role="search">
-  <h3>{{ _('Quick search') }}</h3>
-    <form class="search" action="{{ pathto('search') }}" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="{{ _('Go') }}" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+    <hr/>
+    <form class="search am-form" action="{{ pathto('search') }}" method="get">
+        <fieldset>
+            <div class="am-form-group">
+                <label for="#quick-search">{{ _('Quick search') }}</label>
+                <input id="quick-search" type="text" name="q" />
+            </div>
+            <div class="am-form-group">
+                <input type="submit" class="am-btn am-btn-default" value="{{ _('Go') }}" />
+            </div>
+            <input type="hidden" name="check_keywords" value="yes" />
+            <input type="hidden" name="area" value="default" />
+        </fieldset>
     </form>
 </div>
 <script type="text/javascript">

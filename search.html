@@ -11,49 +11,68 @@
 {% set title = _('Search') %}
 {% set script_files = script_files + ['_static/searchtools.js'] %}
 {% block extrahead %}
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("{{ pathto('searchindex.js', 1) }}"); });
-  </script>
-  {# this is used when loading the search index using $.ajax fails,
+    <script type="text/javascript">
+        window.onload = function() {
+            $('#fallback').hide();
+            Search.loadIndex("{{ pathto('searchindex.js', 1) }}");
+        }
+    </script>
+    {# this is used when loading the search index using $.ajax fails,
      such as on Chrome for documents on localhost #}
-  <script type="text/javascript" id="searchindexloader"></script>
-  {{ super() }}
+    <script type="text/javascript" id="searchindexloader"></script>
+    {{ super() }}
 {% endblock %}
 {% block body %}
-  <h1 id="search-documentation">{{ _('Search') }}</h1>
-  <div id="fallback" class="admonition warning">
-  <script type="text/javascript">$('#fallback').hide();</script>
-  <p>
-    {% trans %}Please activate JavaScript to enable the search
-    functionality.{% endtrans %}
-  </p>
-  </div>
-  <p>
-    {% trans %}From here you can search these documents. Enter your search
-    words into the box below and click "search". Note that the search
-    function will automatically search for all of the words. Pages
-    containing fewer words won't appear in the result list.{% endtrans %}
-  </p>
-  <form action="" method="get">
-    <input type="text" name="q" value="" />
-    <input type="submit" value="{{ _('search') }}" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>
-  {% if search_performed %}
-    <h2>{{ _('Search Results') }}</h2>
-    {% if not search_results %}
-      <p>{{ _('Your search did not match any documents. Please make sure that all words are spelled correctly and that you\'ve selected enough categories.') }}</p>
+    <h1 id="search-documentation">{{ _('Search') }}</h1>
+    <div id="fallback" class="admonition warning">
+        <h2 class="admonition-title">{{ _('Search') }}</h2>
+        <p>
+            {% trans %}Please activate JavaScript to enable the search functionality.{% endtrans %}
+        </p>
+    </div>
+    <p>
+        {% trans %}From here you can search these documents. Enter your search
+        words into the box below and click "search". Note that the search
+        function will automatically search for all of the words. Pages
+        containing fewer words won't appear in the result list.{% endtrans %}
+    </p>
+
+    <form class="search am-form am-form-horizontal" action="" method="get">
+        <fieldset>
+            <div class="am-form-group">
+                <label class="am-u-sm-2 am-form-label" for="#search-query">{{ _('Search query') }}</label>
+                <div class="am-u-sm-10">
+                    <input id="search-query" type="text" name="q" />
+                </div>
+            </div>
+            <div class="am-form-group">
+                <div class="am-u-sm-offset-2 am-u-sm-5">
+                    <input type="submit" class="am-btn am-btn-default" value="{{ _('search') }}" />
+                </div>
+                <span id="search-progress" class="am-u-sm-4"></span>
+            </div>
+        </fieldset>
+    </form>
+
+    {# NOTE: the following doesn't actually render because searchtools.js replaces it #}
+    <div id="search-results">
+    {% if search_performed %}
+        {% if search_results %}
+            <h2>{{ _('Search Results') }}</h2>
+            <ul>
+                {% for href, caption, context in search_results %}
+                <li>
+                    <a href="{{ pathto(item.href) }}">{{ caption }}</a>
+                    <div class="context">{{ context|e }}</div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <div class="admonition note">
+                <h2 class="admonition-title">{{ _('Search Results') }}</h2>
+                <p>{{ _('Your search did not match any documents. Please make sure that all words are spelled correctly and that you\'ve selected enough categories.') }}</p>
+            </div>
+        {% endif %}
     {% endif %}
-  {% endif %}
-  <div id="search-results">
-  {% if search_results %}
-    <ul>
-    {% for href, caption, context in search_results %}
-      <li><a href="{{ pathto(item.href) }}">{{ caption }}</a>
-        <div class="context">{{ context|e }}</div>
-      </li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </div>
+    </div>
 {% endblock %}
