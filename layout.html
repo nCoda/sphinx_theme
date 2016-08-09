@@ -11,7 +11,8 @@
 {# add amazeUI JavaScript file #}
 {% set script_files = script_files + ['_static/amazeui.min.js'] %}
 
-{# add amazeUI and Pygments CSS files #}
+{# add Fira Sans, amazeUI, and Pygments CSS files #}
+{% set css_files = css_files + ['https://code.cdn.mozilla.net/fonts/fira.css'] %}
 {% set css_files = css_files + ['_static/pygments.css', '_static/amazeui.min.css'] %}
 
 
@@ -50,8 +51,26 @@
                     </a>
                 </li>
                 {%- endfor %}
+                <li>
+                    <a href="{{ pathto(master_doc) }}" title="Home">
+                        <i class="am-icon-home"></i>
+                        {% if parents %}&nbsp;<i class="am-icon-chevron-right"></i>&nbsp;{% endif %}
+                    </a>
+                </li>
                 {%- for parent in parents %}
-                    <li><a href="{{ parent.link|e }}" {% if loop.last %}{{ accesskey("U") }}{% endif %}>{{ parent.title }}</a>{{ reldelim1 }}</li>
+                    {% if loop.last %}
+                        <li>
+                            <a href="{{ parent.link|e }}" {{ accesskey("U") }}>
+                                {{ parent.title }}&nbsp;<i class="am-icon-chevron-down"></i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ parent.link|e }}">
+                                {{ parent.title }}&nbsp;<i class="am-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% endif %}
                 {%- endfor %}
                 {%- block relbaritems %} {% endblock %}
             </ul>
@@ -64,36 +83,32 @@
         <div class="am-offcanvas-bar">
             <div class="am-offcanvas-content">
                 {%- block sidebarlogo %}
-                <p class="logo">
+                <div class="logo">
                     <a href="https://ncodamusic.org/" rel="nofollow">
-                        <img class="logo" src="{{ pathto('_static/' + 'nCoda-logo_light_bg.png', 1) }}" alt="nCoda"/>
+                        <img class="logo" src="{{ pathto('_static/' + 'nCoda-logo_dark_bg.png', 1) }}" alt="nCoda"/>
                     </a>
-                </p>
+                    <div class="project_version">{{ project }} {{ version }}</div>
+                </div>
+                <hr/>
                 {%- endblock %}
-                <a href="{{ pathto(master_doc) }}" class="homelink">{{ shorttitle|e }} (Home)</a>
-                {%- if sidebars != None %}
-                {#- new style sidebar: explicitly include/exclude templates #}
-                {%- for sidebartemplate in sidebars %}
-                {%- include sidebartemplate %}
-                {%- endfor %}
-                {%- else %}
-                {#- old style sidebars: using blocks -- should be deprecated #}
-                {%- block sidebartoc %}
-                {%- include "localtoc.html" %}
-                {%- endblock %}
-                {%- block sidebarrel %}
-                {%- include "relations.html" %}
-                {%- endblock %}
-                {%- block sidebarsourcelink %}
-                {%- include "sourcelink.html" %}
-                {%- endblock %}
-                {%- if customsidebar %}
-                {%- include customsidebar %}
-                {%- endif %}
-                {%- block sidebarsearch %}
-                {%- include "searchbox.html" %}
-                {%- endblock %}
-                {%- endif %}
+                <nav class="am-nav">
+                    <li><a href="{{ pathto(master_doc) }}" class="homelink"><i class="am-icon-home"></i> Home</a></li>
+                    {%- block sidebarsourcelink %}
+                        {%- include "sourcelink.html" %}
+                    {%- endblock %}
+                    {%- block sidebartoc %}
+                        {%- include "localtoc.html" %}
+                    {%- endblock %}
+                    {%- block sidebarrel %}
+                        {%- include "relations.html" %}
+                    {%- endblock %}
+                    {%- if customsidebar %}
+                        {%- include customsidebar %}
+                    {%- endif %}
+                    {%- block sidebarsearch %}
+                        {%- include "searchbox.html" %}
+                    {%- endblock %}
+                </nav>
             </div>
         </div>
     </div>
@@ -188,7 +203,7 @@
                         <img class="logo" src="{{ pathto('_static/' + 'nCoda-logo_light_bg.png', 1) }}" alt="nCoda"/>
                     </a>
                     <span class="am-footer-divider"> | </span>
-                    <a href="mailto:contact@ncodamusic.org">Contact</a>
+                    {{ project }} {{ version }}
                 </div>
                 {%- if show_copyright or last_updated or show_sphinx %}
                     <div class="am-footer-miscs">
