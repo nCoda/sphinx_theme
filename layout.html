@@ -42,7 +42,10 @@
             </a>
         </h1>
         {%- endblock %}
-        <div class="am-topbar-right">
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-default am-show-sm-only" data-am-collapse="{target:'#topbar-collapse'}">
+            <span class="am-sr-only">Menu</span><span class="am-icon-bars"></span>
+        </button>
+        <div class="am-topbar-right am-collapse am-topbar-collapse" id="topbar-collapse">
             <ul class="am-nav am-nav-pills am-topbar-nav">
                 {%- for rellink in rellinks %}
                 <li>
@@ -140,10 +143,12 @@
   <head>
     <meta charset="{{ encoding }}">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Set rendering engine for 360 Browser -->
+    {# Set rendering engine for 360 Browser #}
     <meta name="renderer" content="webkit">
-    <!-- Avoid extra ads from Baidu -->
-    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    {# Avoid extra ads from Baidu #}
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    {# Tell mobile devices "we got this" #}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     {{ metatags }}
     {%- block htmltitle %}
     <title>{{ title|striptags|e }}{{ titlesuffix }}</title>
